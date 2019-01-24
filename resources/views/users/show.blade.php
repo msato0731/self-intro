@@ -12,6 +12,18 @@
                 </div>
             </div>
         </aside>
-        {!! $user->profile !!}
+        <div class="col-sm-8">
+            {!! $user->profile !!}
+            {!! Form::open(['route' => 'comments.store'])!!}
+                <div class="form-group">
+                    {!! Form::textarea('comment', old('comment'), ['class' => 'form-control','rows' => '2']) !!}
+                    {!! Form::hidden('user_id', $user->id) !!}
+                    {!! Form::submit('Post', ['class' => 'btn btn-primary btn-block']) !!}
+                </div>
+            {!! Form::close() !!}
+            @if (count($comments) > 0)
+                @include('comments.comments', ['comments' => $comments])
+            @endif
+        </div>
     </div>
 @endsection
