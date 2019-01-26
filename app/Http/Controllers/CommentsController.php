@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\User; // 追加
 
+use App\Comment;
+
 class CommentsController extends Controller
 {
     
@@ -28,16 +30,35 @@ class CommentsController extends Controller
     public function store(Request $request)
     {
         $user = User::find($request->user_id);
-        $user->comments()->create(['user_id' => $request->user_id, 'comment' => $request->comment]);
-
+        $comment_user = \Auth::user();
+        
+        $user->comments()->create(['comment' => $request->comment, 'comment_user_id' => $comment_user->id]);
         return back();
+    }
+    
+    public function edit($id)
+    {
+        $comment = Comment::find($id);
+        
+        return view('comments.edit',[
+           'comment' => $comment, 
+        ]);
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $comment = Comment::find($id);
+        $comment->comment = $request->comment;
+        $comment->save();
+        
+        return redirect('/');
     }
     
     public function destroy($id)
     {
-        $comment = \App\Comment::find($id);
+        $comment = Comment::find($id);
         
-        if (\Auth::id() === $comment->user_id){
+        if (\Auth::id() === $comment->comment_user_id()){
             $comment->delete();
         }
         

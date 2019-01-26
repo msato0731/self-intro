@@ -13,12 +13,22 @@
             </div>
         </aside>
         <div class="col-sm-8">
-            {!! $user->profile !!}
+            <div class="card">
+                <div class="card-header">
+                    Profile
+                </div>
+                <div class="card-body">
+                    {!! $user->profile !!}
+                </div>
+                @if (Auth::id() == $user->id)
+                    {!! link_to_route('users.edit', 'Edit', ['id' => $user->id], ['class' => 'btn btn-primary btn-sm']) !!}
+                @endif
+            </div>
             {!! Form::open(['route' => 'comments.store'])!!}
-                <div class="form-group">
+                <div class="form-group mt-3">
                     {!! Form::textarea('comment', old('comment'), ['class' => 'form-control','rows' => '2']) !!}
                     {!! Form::hidden('user_id', $user->id) !!}
-                    {!! Form::submit('Post', ['class' => 'btn btn-primary btn-block']) !!}
+                    {!! Form::submit('Comment', ['class' => 'btn btn-primary btn-block']) !!}
                 </div>
             {!! Form::close() !!}
             @if (count($comments) > 0)

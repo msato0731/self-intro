@@ -28,4 +28,22 @@ class UsersController extends Controller
 
         return view('users.show', $data);   
     }
+    
+    public function edit($id)
+    {
+        $user = User::find($id);
+        
+        return view('users.edit',[
+           'user' => $user, 
+        ]);
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+        $user->profile = $request->profile;
+        $user->save();
+        
+        return redirect('/');
+    }
 }
